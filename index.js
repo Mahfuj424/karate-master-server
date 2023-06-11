@@ -26,6 +26,15 @@ async function run() {
     await client.connect();
 
     const addClassCollection = client.db("martialArts").collection("addClass");
+    const addUserCollection = client.db("martialArts").collection("user")
+
+
+
+    app.post('/user', async (req, res) => {
+      const body = req.body;
+      const result = await addUserCollection.insertOne(body)
+      res.send(result)
+    })
 
 
     app.post("/addClass", async (req, res) => {
@@ -40,7 +49,7 @@ async function run() {
       res.send(result)
     })
 
-    
+
     app.put('/addClass/:id', async (req, res) => {
       const id = req.params.id;
       const myClass = req.body;
