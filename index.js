@@ -30,9 +30,21 @@ async function run() {
 
 
 
-    app.post('/user', async (req, res) => {
-      const body = req.body;
-      const result = await addUserCollection.insertOne(body)
+    app.put('/user/:email', async (req, res) => {
+      const email = req.params.email
+      const user = req.body
+      const query = { email: email }
+      const options = { upsert: true }
+      const updatedDoc = {
+        $set: user
+      }
+      const result = await addUserCollection.updateOne(query, updatedDoc, options)
+      res.send(result)
+    })
+
+
+    app.get('/user', async (req, res) => {
+      const result = await addUserCollection.find().toArray()
       res.send(result)
     })
 
@@ -63,7 +75,24 @@ async function run() {
           availableSeats: myClass.availableSeats
         }
       }
-      console.log(updatedClasses);
+      
+      const result = await addClassCollection.updateOne(filter, updatedClasses, options)
+      res.send(result)
+
+    })
+
+
+    app.put('/addClasses/:id', async (req, res) => {
+      const id = req.params.id;
+      const myClass = req.body;
+      const filter = { _id: new ObjectId(id) }
+      const options = { upsert: true }
+      const updatedClasses = {
+        $set: {
+          status: myClass.status
+        }
+      }
+      
       const result = await addClassCollection.updateOne(filter, updatedClasses, options)
       res.send(result)
 
