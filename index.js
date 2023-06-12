@@ -41,7 +41,7 @@ async function run() {
 
     app.get('/select/:email', async (req, res) => {
       const email = req.params.email
-      const query = { email: email }
+      const query = { instructorEmail: email }
       const result = await addSelectCollection.find(query).toArray()
       res.send(result)
     })
