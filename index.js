@@ -27,6 +27,24 @@ async function run() {
 
     const addClassCollection = client.db("martialArts").collection("addClass");
     const addUserCollection = client.db("martialArts").collection("user")
+    const addSelectCollection = client.db("martialArts").collection("select")
+
+
+
+
+    app.post('/selected', async (req, res) => {
+      const body = req.body
+      const result = await addSelectCollection.insertOne(body)
+      res.send(result)
+    });
+
+
+    app.get('/select/:email', async (req, res) => {
+      const email = req.params.email
+      const query = { email: email }
+      const result = await addSelectCollection.find(query).toArray()
+      res.send(result)
+    })
 
 
 
@@ -49,11 +67,31 @@ async function run() {
     })
 
 
+    app.get('/instructorData', async (req, res) => {
+      const result = await addUserCollection.find({ role: 'instructor' }).toArray()
+      res.send(result)
+    })
+
+
+    app.get('/classesData', async (req, res) => {
+      const result = await addClassCollection.find({ status: 'approve' }).toArray()
+      res.send(result)
+    })
+
+
     app.post("/addClass", async (req, res) => {
       const body = req.body;
       const result = await addClassCollection.insertOne(body);
       res.send(result);
     });
+
+
+    app.get('/users/:email', async (req, res) => {
+      const email = req.params.email
+      const result = await addUserCollection.findOne({ email: email })
+      res.send(result)
+    });
+
 
 
     app.get('/addClass', async (req, res) => {
